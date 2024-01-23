@@ -95,6 +95,25 @@ with st.expander("Check Toolbox Health"):
 
             display_response()
 
+
+with st.expander("Get Tools"):
+    with st.form("Get Tools"):
+        mt_service_url = st.text_input("MT Service URL", value="http://127.0.0.1:8000")
+        mt_api_key = st.text_input("MT API Key", value="adam")
+        if mt_api_key == "":
+            mt_api_key = None
+    
+        submit_add_api_tool = st.form_submit_button("Get Tools")
+        if submit_add_api_tool:
+            st.session_state['responses'].append(
+                api.get_tools(
+                    mt_service_url=mt_service_url,
+                    mt_api_key=mt_api_key,
+                )
+            )
+
+            display_response()
+
 # Create form for 'add_api_tool'
 with st.expander("Add API Tool"):
     with st.form("Add API Tool"):

@@ -47,7 +47,7 @@ class MagicToolboxClient:
     def toolbox_health(self, mt_service_url: str, mt_api_key: Optional[str] =None) -> Dict[str, Any]:
         data = {
             'mt_service_url': mt_service_url,
-            'mt_api_key': mt_api_key,
+            'mt_api_key': mt_api_key
         }
 
         logger.info("Toolbox Health")
@@ -67,6 +67,21 @@ class MagicToolboxClient:
         logger.info(data)
 
         return self._request('POST', 'magic_toolbox/add_api_tool', data)
+
+    # do the get route
+    def get_tools(self, mt_service_url: str, mt_api_key: str):
+        data = {
+            'mt_service_url': mt_service_url,
+            'mt_api_key': mt_api_key
+        }
+
+        logger.info("Getting Tools from Toolbox Instance")
+        logger.info(data)
+
+        return self._request('POST', 'magic_toolbox/get_tools', data)
+
+
+
 
 if __name__ == "__main__":
     # Example usage

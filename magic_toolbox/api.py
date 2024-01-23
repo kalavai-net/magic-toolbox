@@ -140,31 +140,42 @@ async def create_magic_toolbox(request: CreateMTRequest, api_key: str = Depends(
 #4. Add new servive by URL per Instance + User
 @app.post("/magic_toolbox/add_api_tool", tags=["Tool Management"])
 async def add_service(request: AddAPIToolRequest, api_key: str = Depends(verify_api_key)):
-    try:
-        tool_library = ToolLibraryClient(service_url=request.tool_url, api_key=request.mt_api_key)
-    except:
-        raise HTTPException(status_code=400, detail="Unable to connect to the tool library service.")
+    #try:
+    logger.debug(f"Adding service {request}")
+    tool_library = ToolLibraryClient(service_url=request.mt_service_url, api_key=request.mt_api_key)
+    #except:
+    #    raise HTTPException(status_code=400, detail="Unable to connect to the tool library service.")
 
-
-    try:
-        result = tool_library.register_api_tool(
-            tool_url=request.tool_url,
-            tool_routes=request.tool_routes,
-            tool_api_key=request.tool_api_key
-        )
-        return result
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    result = tool_library.register_api_tool(
+        tool_url=request.tool_url,
+        tool_routes=request.tool_routes,
+        tool_api_key=request.tool_api_key
+    )
+    return result
+    #except ValueError as e:
+    #    raise HTTPException(status_code=400, detail=str(e))
 
 # health check on underlying Toolbox API
 @app.post("/magic_toolbox/health", tags = ["Tool Management"])
 async def health(request: ServiceRequest, api_key: str = Depends(verify_api_key)):
+    
     try:
         tool_library = ToolLibraryClient(service_url=request.mt_service_url, api_key=request.mt_api_key)
     except:
         raise HTTPException(status_code=400, detail="Unable to connect to the tool library service.")
 
     return tool_library.health()
+
+@app.post("/magic_toolbox/get_tools", tags = ["Tool Management"])
+async def get_tools(request: ServiceRequest, api_key: str = Depends(verify_api_key)):
+    
+    try:
+        tool_library = ToolLibraryClient(service_url=request.mt_service_url, api_key=request.mt_api_key)
+    except:
+        raise HTTPException(status_code=400, detail="Unable to connect to the tool library service.")
+
+    return tool_library.get_tools()
+
 
 
 
